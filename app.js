@@ -106,30 +106,54 @@ app.get("/my-rentals", (req, res) => {
   });
 });
 
-// Return accessory
+// Return accessory route
 app.post("/return", (req, res) => {
   const rentalId = req.body.rental_id;
   const studentId = req.session.student.student_id;
 
-  const sql = `
+  // Update the rental record to mark as returned
+  const updateRentalSql = `
     UPDATE rentals 
     SET returned = 1, returned_on = NOW()
     WHERE id = ? AND student_id = ? AND returned = 0
   `;
 
-  db.query(sql, [rentalId, studentId], (err, result) => {
+  db.query(updateRentalSql, [rentalId, studentId], (err, result) => {
     if (err) throw err;
+
+    // Check if the rental was updated successfully
     if (result.affectedRows > 0) {
-      const getItemName = `
-        SELECT a.name FROM accessories a 
-        JOIN rentals r ON a.id = r.accessory_id 
-        WHERE r.id = ?
+      // Increase the quantity of the accessory in the accessories table
+      const getAccessoryIdSql = `
+        SELECT accessory_id FROM rentals WHERE id = ?
       `;
-      db.query(getItemName, [rentalId], (err2, rows) => {
-        const itemName = rows?.[0]?.name || "item";
-        res.render("return", { success: true, itemName });
+      db.query(getAccessoryIdSql, [rentalId], (err2, rows) => {
+        if (err2) throw err2;
+
+        const accessoryId = rows[0].accessory_id;
+
+        const updateAccessorySql = `
+          UPDATE accessories 
+          SET quantity = quantity + 1 
+          WHERE id = ?
+        `;
+        db.query(updateAccessorySql, [accessoryId], (err3) => {
+          if (err3) throw err3;
+
+          // Return a success message to the user
+          const getItemNameSql = `
+            SELECT a.name FROM accessories a 
+            JOIN rentals r ON a.id = r.accessory_id 
+            WHERE r.id = ?
+          `;
+          db.query(getItemNameSql, [rentalId], (err4, rows2) => {
+            const itemName = rows2?.[0]?.name || "the item";
+            res.render("return", { success: true, itemName });
+          });
+        });
       });
     } else {
+      // If no rows were affected, the return failed
       res.render("return", { success: false, itemName: "" });
     }
   });
