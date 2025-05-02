@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Return Status</title>
+    <link rel="stylesheet" href="/css/dashboard.css" />
+  </head>
+  <body>
+    <div class="dashboard-container">
+      <h2>
+        <%= success ? `You successfully returned ${itemName}` : "Return failed."
+        %>
+      </h2>
+      <a href="/my-rentals">Go Back to My Rentals</a>
+    </div>
+  </body>
+</html>

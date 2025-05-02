@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>My Rentals</title>
+    <link rel="stylesheet" href="/css/dashboard.css" />
+  </head>
+  <body>
+    <div class="dashboard-container">
+      <h2>My Rentals - <%= student.name %></h2>
+      <a class="logout" href="/logout">Logout</a>
+      <a class="back" href="/dashboard">Back to Dashboard</a>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Accessory</th>
+            <th>Rented On</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% rentals.forEach(r => { %>
+          <tr>
+            <td><%= r.accessory_name %></td>
+            <td>
+              <%= r.rented_at ? new
+              Date(r.rented_at).toISOString().split('T')[0] : "N/A" %>
+            </td>
+            <td><%= r.returned ? "Returned" : "Active" %></td>
+            <td>
+              <% if (!r.returned) { %>
+              <form method="POST" action="/return">
+                <input type="hidden" name="rental_id" value="<%= r.id %>" />
+                <button type="submit">Return</button>
+              </form>
+              <% } else { %>
+              <span>—</span>
+              <% } %>
+            </td>
+          </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  </body>
+</html>

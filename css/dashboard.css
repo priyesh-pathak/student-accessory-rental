@@ -1,0 +1,41 @@
+.dashboard-container {
+  padding: 40px;
+  font-family: Arial;
+}
+
+.logout,
+.myrentals,
+.back {
+  margin-right: 15px;
+  text-decoration: none;
+  color: #1976d2;
+  font-weight: bold;
+}
+
+.accessories,
+table {
+  margin-top: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.item {
+  border: 1px solid #ddd;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  width: 200px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+table th,
+table td {
+  padding: 12px;
+  border: 1px solid #ccc;
+  text-align: center;
+}

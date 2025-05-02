@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="/css/dashboard.css" />
+  </head>
+  <body>
+    <div class="dashboard-container">
+      <h2>Welcome, <%= student.name %></h2>
+      <a class="logout" href="/logout">Logout</a>
+      <a class="myrentals" href="/my-rentals">View My Rentals</a>
+
+      <h3>Available Accessories</h3>
+      <div class="accessories">
+        <% accessories.forEach(item => { %>
+          <div class="item">
+            <h4><%= item.name %></h4>
+            <p>Available: <%= item.quantity %></p>
+            <form method="POST" action="/rent">
+              <input type="hidden" name="accessory_id" value="<%= item.id %>">
+              <button type="submit" <% if (item.quantity === 0) { %> disabled <% } %>>
+                Rent
+              </button>
+            </form>
+          </div>
+        <% }); %>
+      </div>
+    </div>
+  </body>
+</html>
